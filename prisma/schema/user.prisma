@@ -1,0 +1,16 @@
+model User {
+    id        String    @id @default(uuid())
+    email     String    @unique
+    password  String
+    role      Role      @default(CANDIDATE)
+    isActive  Boolean   @default(true)
+    createdAt DateTime  @default(now())
+    updatedAt DateTime  @updatedAt
+    deletedAt DateTime?
+
+    candidateProfile CandidateProfile?
+    companyProfile   CompanyProfile?
+    auditLogs        AuditLog[]
+
+    @@map("users")
+}

@@ -1,0 +1,17 @@
+model CompanyProfile {
+    id             String    @id @default(uuid())
+    userId         String    @unique
+    user           User      @relation(fields: [userId], references: [id])
+    companyName    String
+    website        String?
+    creditsBalance Int       @default(0)
+    createdAt      DateTime  @default(now())
+    updatedAt      DateTime  @updatedAt
+    deletedAt      DateTime?
+
+    problems    Problem[]
+    assessments Assessment[]
+    payments    Payment[]
+
+    @@map("company_profiles")
+}

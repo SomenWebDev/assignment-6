@@ -1,0 +1,44 @@
+enum Role {
+    CANDIDATE
+    COMPANY
+    ADMIN
+}
+
+enum ProblemType {
+    CODING
+    MCQ
+    WRITTEN
+}
+
+enum Difficulty {
+    EASY
+    MEDIUM
+    HARD
+}
+
+enum AssessmentStatus {
+    DRAFT
+    PUBLISHED
+    ARCHIVED
+}
+
+enum InvitationStatus {
+    PENDING
+    ACCEPTED
+    EXPIRED
+    REVOKED
+}
+
+enum AttemptStatus {
+    NOT_STARTED
+    IN_PROGRESS
+    SUBMITTED
+    EXPIRED
+}
+
+enum PaymentStatus {
+    PENDING
+    SUCCEEDED
+    FAILED
+    REFUNDED
+}

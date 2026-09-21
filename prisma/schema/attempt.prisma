@@ -1,0 +1,19 @@
+model Attempt {
+    id           String           @id @default(uuid())
+    invitationId String           @unique
+    invitation   Invitation       @relation(fields: [invitationId], references: [id])
+    candidateId  String
+    candidate    CandidateProfile @relation(fields: [candidateId], references: [id])
+    status       AttemptStatus    @default(NOT_STARTED)
+    startedAt    DateTime?
+    submittedAt  DateTime?
+    expiresAt    DateTime?
+    score        Int?
+    createdAt    DateTime         @default(now())
+    updatedAt    DateTime         @updatedAt
+
+    submissions Submission[]
+
+    @@index([candidateId])
+    @@map("attempts")
+}

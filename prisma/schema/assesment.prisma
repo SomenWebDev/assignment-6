@@ -1,0 +1,32 @@
+model Assessment {
+    id           String           @id @default(uuid())
+    companyId    String
+    company      CompanyProfile   @relation(fields: [companyId], references: [id])
+    title        String
+    description  String?
+    durationMins Int
+    passingScore Int
+    status       AssessmentStatus @default(DRAFT)
+    createdAt    DateTime         @default(now())
+    updatedAt    DateTime         @updatedAt
+    deletedAt    DateTime?
+
+    problems    AssessmentProblem[]
+    invitations Invitation[]
+
+    @@index([companyId])
+    @@map("assessments")
+}
+
+model AssessmentProblem {
+    id           String     @id @default(uuid())
+    assessmentId String
+    assessment   Assessment @relation(fields: [assessmentId], references: [id])
+    problemId    String
+    problem      Problem    @relation(fields: [problemId], references: [id])
+    order        Int
+    points       Int        @default(10)
+
+    @@unique([assessmentId, problemId])
+    @@map("assessment_problems")
+}
