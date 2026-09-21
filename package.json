@@ -12,7 +12,8 @@
     "start": "node dist/server.js",
     "deploy": "npm run build && vercel --prod",
     "db:generate": "prisma generate",
-    "db:migrate": "prisma migrate dev"
+    "db:migrate": "prisma migrate dev",
+    "postinstall": "prisma skills sync || exit 0"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.10.0",
