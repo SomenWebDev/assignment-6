@@ -12,6 +12,7 @@ import {
   refreshTokenHandler,
   logoutHandler,
   meHandler,
+  updateMeHandler,
 } from "./auth.controller";
 
 const router = Router();
@@ -46,5 +47,11 @@ router.post(
 router.post("/logout", logoutHandler);
 
 router.get("/me", auth(), meHandler);
+router.patch(
+  "/me",
+  auth(),
+  validateRequest(AuthValidation.updateMeSchema),
+  updateMeHandler,
+);
 
 export const AuthRoutes = router;

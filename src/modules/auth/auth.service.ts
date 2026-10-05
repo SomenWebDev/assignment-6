@@ -31,6 +31,13 @@ type LoginInput = {
   password: string;
 };
 
+type UpdateMeInput = {
+  fullName?: string;
+  phone?: string;
+  companyName?: string;
+  website?: string;
+};
+
 const googleClient = new OAuth2Client(
   config.google_client_id,
   config.google_client_secret,
@@ -242,6 +249,69 @@ export async function refreshAccessToken(refreshToken: string) {
   }
 
   return { accessToken: signAccessToken(toJwtPayload(user)) };
+}
+
+export async function updateMe(
+  userId: string,
+  role: UserJwtPayload["role"],
+  input: UpdateMeInput,
+) {
+  if (role === "ADMIN") {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Admin accounts have no profile to update",
+    );
+  }
+
+  if (role === "CANDIDATE") {
+    if (input.companyName !== undefined || input.website !== undefined) {
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        "Candidates cannot set company fields",
+      );
+    }
+
+    const user = await prisma.user.update({
+      where: { id: userId },
+      data: {
+        candidateProfile: {
+          update: {
+            ...(input.fullName !== undefined && { fullName: input.fullName }),
+            ...(input.phone !== undefined && { phone: input.phone }),
+          },
+        },
+      },
+      include: { candidateProfile: true, companyProfile: true },
+    });
+
+    const { password, ...safeUser } = user;
+    return safeUser;
+  }
+
+  if (input.fullName !== undefined || input.phone !== undefined) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      "Companies cannot set candidate fields",
+    );
+  }
+
+  const user = await prisma.user.update({
+    where: { id: userId },
+    data: {
+      companyProfile: {
+        update: {
+          ...(input.companyName !== undefined && {
+            companyName: input.companyName,
+          }),
+          ...(input.website !== undefined && { website: input.website }),
+        },
+      },
+    },
+    include: { candidateProfile: true, companyProfile: true },
+  });
+
+  const { password, ...safeUser } = user;
+  return safeUser;
 }
 
 export async function getMe(userId: string) {

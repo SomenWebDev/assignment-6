@@ -33,9 +33,23 @@ const refreshTokenSchema = z.object({
   }),
 });
 
+const updateMeSchema = z.object({
+  body: z
+    .object({
+      fullName: z.string().min(1, "Full name cannot be empty").optional(),
+      phone: z.string().optional(),
+      companyName: z.string().min(1, "Company name cannot be empty").optional(),
+      website: z.string().url("Invalid website URL").optional(),
+    })
+    .refine((body) => Object.keys(body).length > 0, {
+      message: "Provide at least one field to update",
+    }),
+});
+
 export const AuthValidation = {
   registerCandidateSchema,
   registerCompanySchema,
   loginSchema,
   refreshTokenSchema,
+  updateMeSchema,
 };

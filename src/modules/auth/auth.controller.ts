@@ -11,6 +11,7 @@ import {
   getGoogleAuthUrl,
   loginWithGoogle,
   refreshAccessToken,
+  updateMe,
   getMe,
 } from "./auth.service";
 
@@ -136,3 +137,16 @@ export const meHandler = catchAsync(async (req: Request, res: Response) => {
     data: result,
   });
 });
+
+export const updateMeHandler = catchAsync(
+  async (req: Request, res: Response) => {
+    const result = await updateMe(req.user!.id, req.user!.role, req.body);
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "Profile updated successfully",
+      data: result,
+    });
+  },
+);
